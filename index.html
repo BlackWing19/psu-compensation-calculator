@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PSU Academic Compensation Calculator</title>
+  <style>
+    :root{--bg:#f6f8fb;--card:#fff;--text:#1f2937;--muted:#6b7280;--line:#e5e7eb;--accent:#2563eb;--good:#059669;--warn:#d97706}
+    *{box-sizing:border-box} body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,sans-serif;background:var(--bg);color:var(--text);margin:0;padding:24px;line-height:1.5}
+    .wrap{max-width:1100px;margin:auto}.hero{background:linear-gradient(135deg,#1d4ed8,#0ea5e9);color:white;border-radius:22px;padding:26px;margin-bottom:18px;box-shadow:0 12px 30px rgba(37,99,235,.18)}
+    h1{margin:0 0 6px;font-size:28px}.hero p{margin:0;opacity:.94}.grid{display:grid;grid-template-columns:1.2fr .8fr;gap:18px}@media(max-width:900px){.grid{grid-template-columns:1fr}}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 6px 18px rgba(15,23,42,.05)}
+    label{font-weight:650;display:block;margin:10px 0 6px} select,input{width:100%;padding:11px 12px;border:1px solid #d1d5db;border-radius:12px;font-size:15px;background:white}
+    .row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr 48px;gap:10px;align-items:end;border-bottom:1px dashed var(--line);padding:12px 0}.row:first-child{padding-top:0}
+    @media(max-width:760px){.row{grid-template-columns:1fr 1fr}.remove{grid-column:2}}
+    button{border:0;border-radius:12px;padding:11px 14px;font-weight:700;cursor:pointer}.primary{background:var(--accent);color:white}.secondary{background:#eef2ff;color:#1d4ed8}.danger{background:#fee2e2;color:#991b1b;width:48px}
+    .result{font-size:34px;font-weight:800;color:var(--accent);margin:6px 0}.pill{display:inline-block;border-radius:999px;padding:6px 10px;background:#ecfdf5;color:#065f46;font-weight:700;margin-top:6px}
+    table{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px}th,td{border-bottom:1px solid var(--line);padding:9px;text-align:left}th{color:#374151;background:#f9fafb}.muted{color:var(--muted);font-size:13px}.note{background:#fffbeb;border:1px solid #fde68a;color:#92400e;border-radius:14px;padding:12px;margin-top:12px;font-size:14px}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.small{font-size:13px;color:var(--muted)}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hero">
+    <h1>PSU Academic Compensation Calculator</h1>
+    <p>เครื่องคำนวณคะแนนและค่าตอบแทนผลงานทางวิชาการ ตามเกณฑ์ ม.อ. พ.ศ. 2564 และฉบับแก้ไข พ.ศ. 2565</p>
+  </div>
+  <div class="grid">
+    <div class="card">
+      <h2>กรอกผลงาน</h2>
+      <label>ตำแหน่งวิชาการ</label>
+      <select id="rank" onchange="calculate()">
+        <option value="assistant">ผู้ช่วยศาสตราจารย์</option>
+        <option value="associate">รองศาสตราจารย์</option>
+        <option value="professor">ศาสตราจารย์</option>
+      </select>
+      <div id="papers"></div>
+      <div class="actions">
+        <button class="secondary" onclick="addPaper()">+ เพิ่มผลงาน</button>
+        <button class="primary" onclick="calculate()">คำนวณ</button>
+        <button class="secondary" onclick="window.print()">พิมพ์ / Save PDF</button>
+      </div>
+      <div class="note">หมายเหตุ: โปรแกรมนี้ช่วยคำนวณเบื้องต้นเท่านั้น ผลการพิจารณาจริงขึ้นกับการตรวจสอบ HRMIS/ส่วนงาน และเงื่อนไขประกาศมหาวิทยาลัย</div>
+    </div>
+    <div class="card">
+      <h2>ผลคำนวณ</h2>
+      <div class="muted">คะแนนรวม</div>
+      <div class="result" id="totalScore">0.00</div>
+      <div class="muted">ระดับผลการประเมิน</div>
+      <div class="pill" id="level">ยังไม่ถึงเกณฑ์</div>
+      <div style="margin-top:14px" class="muted">ค่าตอบแทนโดยประมาณ</div>
+      <div class="result" id="monthly">0 บาท/เดือน</div>
+      <div class="small" id="yearly">รวม 12 เดือน = 0 บาท</div>
+      <h3>รายละเอียดคะแนน</h3>
+      <table><thead><tr><th>#</th><th>ฐานข้อมูล</th><th>บทบาท</th><th>คะแนน</th></tr></thead><tbody id="breakdown"></tbody></table>
+    </div>
+  </div>
+  <div class="card" style="margin-top:18px">
+    <h2>เกณฑ์ที่ใช้ในโปรแกรม</h2>
+    <p class="muted">Database score: WoS = 1.00, International databases อื่น เช่น Scopus/PubMed = 0.75, TCI กลุ่ม 1 = 0.50. Author weight: First+Corresponding = 1.25, First หรือ Corresponding = 1.00, Co-author = 0.25.</p>
+  </div>
+</div>
+<script>
+const dbScore={wos:1.00, intl:0.75, tci:0.50};
+const dbName={wos:'Web of Science', intl:'Scopus/PubMed/International', tci:'TCI กลุ่ม 1'};
+const roleWeight={fc:1.25, f_or_c:1.00, co:0.25};
+const roleName={fc:'First + Corresponding', f_or_c:'First หรือ Corresponding', co:'Co-author'};
+const rates={
+  assistant:[{min:.37,max:.86,level:1,m:2240},{min:.87,max:1.62,level:2,m:4480},{min:1.63,max:2.62,level:3,m:6720},{min:2.63,max:Infinity,level:4,m:8400}],
+  associate:[{min:.50,max:1.24,level:1,m:3960},{min:1.25,max:2.24,level:2,m:7920},{min:2.25,max:3.24,level:3,m:11880},{min:3.25,max:Infinity,level:4,m:14850}],
+  professor:[{min:1.00,max:1.74,level:1,m:5200},{min:1.75,max:2.74,level:2,m:10400},{min:2.75,max:3.74,level:3,m:15600},{min:3.75,max:Infinity,level:4,m:19500}]
+};
+function addPaper(){
+ const div=document.createElement('div'); div.className='row';
+ div.innerHTML=`<div><label>ชื่อผลงาน</label><input placeholder="เช่น PDA study" oninput="calculate()"></div>
+ <div><label>ฐานข้อมูล</label><select onchange="calculate()"><option value="wos">Web of Science</option><option value="intl">Scopus/PubMed/International</option><option value="tci">TCI กลุ่ม 1</option></select></div>
+ <div><label>บทบาท</label><select onchange="calculate()"><option value="fc">First + Corresponding</option><option value="f_or_c">First หรือ Corresponding</option><option value="co">Co-author</option></select></div>
+ <div><label>จำนวนผลงานซ้ำ</label><input type="number" min="1" value="1" oninput="calculate()"></div>
+ <button class="danger remove" onclick="this.parentElement.remove();calculate()">×</button>`;
+ document.getElementById('papers').appendChild(div); calculate();
+}
+function money(n){return n.toLocaleString('th-TH')+' บาท'}
+function calculate(){
+ let total=0, rows=[];
+ document.querySelectorAll('#papers .row').forEach((r,i)=>{
+   const selects=r.querySelectorAll('select'); const qty=Math.max(1,parseFloat(r.querySelector('input[type=number]').value)||1);
+   const db=selects[0].value, role=selects[1].value; const score=dbScore[db]*roleWeight[role]*qty;
+   total+=score; rows.push({i:i+1,db,role,score});
+ });
+ const rank=document.getElementById('rank').value; const rate=rates[rank].find(x=>total>=x.min && total<=x.max);
+ document.getElementById('totalScore').textContent=total.toFixed(2);
+ document.getElementById('level').textContent=rate?`ระดับ ${rate.level}`:'ยังไม่ถึงเกณฑ์';
+ document.getElementById('monthly').textContent=rate?money(rate.m)+'/เดือน':'0 บาท/เดือน';
+ document.getElementById('yearly').textContent='รวม 12 เดือน = '+money(rate?rate.m*12:0);
+ document.getElementById('breakdown').innerHTML=rows.map(x=>`<tr><td>${x.i}</td><td>${dbName[x.db]}</td><td>${roleName[x.role]}</td><td>${x.score.toFixed(2)}</td></tr>`).join('');
+}
+addPaper();
+</script>
+</body>
+</html>
