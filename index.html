@@ -6,8 +6,31 @@
   <title>PSU Academic Compensation Calculator</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <style>
-    :root{--bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#667085;--line:#e4e7ec;--accent:#1d4ed8;--accent2:#0891b2;--good:#047857;--warn:#b45309;--danger:#b91c1c}
-    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,sans-serif;line-height:1.55;padding:22px}.wrap{max-width:1180px;margin:auto}.hero{background:linear-gradient(135deg,#1d4ed8,#0891b2);color:#fff;border-radius:24px;padding:26px 28px;margin-bottom:16px;box-shadow:0 14px 35px rgba(29,78,216,.18)}h1{margin:0;font-size:28px}.hero p{margin:6px 0 0;opacity:.94}.grid{display:grid;grid-template-columns:1.15fr .85fr;gap:16px}@media(max-width:920px){.grid{grid-template-columns:1fr}}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 7px 22px rgba(16,24,40,.05);margin-bottom:16px}h2{margin:0 0 10px}.tabs{display:flex;gap:8px;margin:10px 0 14px;flex-wrap:wrap}.tab{border:1px solid var(--line);background:#fff;color:#344054;padding:10px 14px;border-radius:999px;font-weight:700;cursor:pointer}.tab.active{background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe}label{display:block;font-weight:700;margin:10px 0 6px}select,input{width:100%;border:1px solid #d0d5dd;border-radius:12px;padding:11px 12px;font-size:15px;background:#fff}.row{display:grid;grid-template-columns:1.4fr .8fr .8fr .6fr 42px;gap:10px;align-items:end;border-bottom:1px dashed var(--line);padding:12px 0}@media(max-width:760px){.row{grid-template-columns:1fr 1fr}.row button{grid-column:2}}button{border:0;border-radius:12px;padding:11px 14px;font-weight:800;cursor:pointer}.primary{background:var(--accent);color:#fff}.secondary{background:#eef2ff;color:#1d4ed8}.soft{background:#f2f4f7;color:#344054}.danger{background:#fee2e2;color:#991b1b;padding:11px 0}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}.drop{border:2px dashed #93c5fd;border-radius:18px;padding:22px;text-align:center;background:#eff6ff}.drop input{background:#fff;margin-top:12px}.muted{color:var(--muted);font-size:13px}.result{font-size:34px;font-weight:900;color:var(--accent);margin:2px 0}.pill{display:inline-block;border-radius:999px;background:#ecfdf3;color:#067647;padding:7px 11px;font-weight:900}.warn{background:#fffbeb;border:1px solid #fedf89;color:#93370d;border-radius:14px;padding:12px;margin-top:12px;font-size:14px}.ok{background:#ecfdf3;border:1px solid #abefc6;color:#067647;border-radius:14px;padding:12px;margin-top:12px;font-size:14px}.hidden{display:none!important}table{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px}th,td{border-bottom:1px solid var(--line);padding:9px;text-align:left;vertical-align:top}th{background:#f9fafb;color:#344054}.small{font-size:12.5px;color:var(--muted)}.preview{max-height:260px;overflow:auto;background:#101828;color:#e5e7eb;border-radius:12px;padding:12px;font-size:12px;white-space:pre-wrap;margin-top:10px}.topline{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:760px){.topline{grid-template-columns:1fr}}
+    :root{
+      --bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#667085;--line:#e4e7ec;
+      --accent:#1d4ed8;--accent2:#0891b2;--good:#047857;--warn:#b45309;--danger:#b91c1c;
+      --soft-blue:#eff6ff;--soft-green:#ecfdf3;--soft-red:#fee2e2;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,sans-serif;line-height:1.55;padding:22px}
+    .wrap{max-width:1180px;margin:auto}
+    .hero{background:linear-gradient(135deg,#1d4ed8,#0891b2);color:#fff;border-radius:24px;padding:26px 28px;margin-bottom:16px;box-shadow:0 14px 35px rgba(29,78,216,.18)}
+    h1{margin:0;font-size:28px} .hero p{margin:6px 0 0;opacity:.94}
+    .grid{display:grid;grid-template-columns:1.15fr .85fr;gap:16px}@media(max-width:920px){.grid{grid-template-columns:1fr}}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 7px 22px rgba(16,24,40,.05);margin-bottom:16px}
+    h2{margin:0 0 10px}.tabs{display:flex;gap:8px;margin:10px 0 14px;flex-wrap:wrap}
+    .tab{border:1px solid var(--line);background:#fff;color:#344054;padding:10px 14px;border-radius:999px;font-weight:700;cursor:pointer}.tab.active{background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe}
+    label{display:block;font-weight:700;margin:10px 0 6px} select,input{width:100%;border:1px solid #d0d5dd;border-radius:12px;padding:11px 12px;font-size:15px;background:#fff}
+    .row{display:grid;grid-template-columns:1.4fr .8fr .8fr .6fr 42px;gap:10px;align-items:end;border-bottom:1px dashed var(--line);padding:12px 0}
+    @media(max-width:760px){.row{grid-template-columns:1fr 1fr}.row button{grid-column:2}}
+    button{border:0;border-radius:12px;padding:11px 14px;font-weight:800;cursor:pointer}.primary{background:var(--accent);color:#fff}.secondary{background:#eef2ff;color:#1d4ed8}.soft{background:#f2f4f7;color:#344054}.danger{background:#fee2e2;color:#991b1b;padding:11px 0}
+    .actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}.drop{border:2px dashed #93c5fd;border-radius:18px;padding:22px;text-align:center;background:#eff6ff}.drop input{background:#fff;margin-top:12px}
+    .muted{color:var(--muted);font-size:13px}.result{font-size:34px;font-weight:900;color:var(--accent);margin:2px 0}.pill{display:inline-block;border-radius:999px;background:#ecfdf3;color:#067647;padding:7px 11px;font-weight:900}
+    .warn{background:#fffbeb;border:1px solid #fedf89;color:#93370d;border-radius:14px;padding:12px;margin-top:12px;font-size:14px}.ok{background:#ecfdf3;border:1px solid #abefc6;color:#067647;border-radius:14px;padding:12px;margin-top:12px;font-size:14px}.hidden{display:none!important}
+    table{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px} th,td{border-bottom:1px solid var(--line);padding:9px;text-align:left;vertical-align:top} th{background:#f9fafb;color:#344054}.small{font-size:12.5px;color:var(--muted)}
+    .preview{max-height:260px;overflow:auto;background:#101828;color:#e5e7eb;border-radius:12px;padding:12px;font-size:12px;white-space:pre-wrap;margin-top:10px}.topline{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:760px){.topline{grid-template-columns:1fr}}
+    .nextBox{margin-top:12px;padding:12px;border:1px solid #dbeafe;background:#eff6ff;border-radius:14px;color:#1e3a8a;font-size:14px}.progress{height:10px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin-top:8px}.bar{height:10px;background:var(--accent);width:0%}.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace}
+    @media print{body{background:#fff}.hero,.actions,.tabs,.drop,details{display:none!important}.grid{display:block}.card{box-shadow:none;break-inside:avoid}}
   </style>
 </head>
 <body>
@@ -22,7 +45,7 @@
           <div><label>ตำแหน่งวิชาการ</label><select id="rank" onchange="calculate()"><option value="assistant">ผู้ช่วยศาสตราจารย์</option><option value="associate">รองศาสตราจารย์</option><option value="professor">ศาสตราจารย์</option></select></div>
           <div><label>ปีที่ยื่น/หมายเหตุ</label><input id="yearNote" placeholder="เช่น ประจำปี 2569" /></div>
         </div>
-        <div class="tabs"><button class="tab active" id="tabManual" onclick="showMode('manual')">กรอกเอง</button><button class="tab" id="tabUpload" onclick="showMode('upload')">Upload PDF ใบส่ง</button></div>
+        <div class="tabs"><button class="tab active" id="tabManual" onclick="showMode('manual')">กรอกเอง</button><button class="tab" id="tabUpload" onclick="showMode('upload')">Upload PDF ใบส่ง</button><button class="tab" id="tabScore" onclick="showMode('score')">กรอกคะแนนรวม</button></div>
 
         <div id="manualBox">
           <div id="papers"></div>
@@ -35,6 +58,14 @@
           <div id="parseStatus" class="warn">ยังไม่ได้ upload ไฟล์</div>
           <details><summary class="muted">ดูข้อความที่อ่านจาก PDF</summary><div id="rawText" class="preview"></div></details>
         </div>
+
+        <div id="scoreBox" class="hidden">
+          <label>คะแนนรวมที่ต้องการคำนวณ</label>
+          <input id="manualScore" type="number" step="0.0001" min="0" placeholder="เช่น 1.625 หรือ 1.85" oninput="calculate()">
+          <div class="actions"><button class="primary" onclick="calculate()">คำนวณจากคะแนนรวม</button><button class="secondary" onclick="window.print()">พิมพ์ / Save PDF</button></div>
+          <div class="warn">โหมดนี้ใช้เฉพาะคำนวณระดับจากคะแนนรวมโดยตรง ไม่แสดง breakdown รายบทความ</div>
+        </div>
+
         <div class="warn">หมายเหตุ: โปรแกรมนี้เป็นเครื่องช่วยคำนวณเบื้องต้น ผลจริงขึ้นกับการตรวจ HRMIS/ส่วนงาน และประกาศมหาวิทยาลัย</div>
       </div>
 
@@ -42,28 +73,175 @@
     </div>
 
     <div>
-      <div class="card"><h2>ผลคำนวณ</h2><div class="muted">คะแนนรวม</div><div class="result" id="totalScore">0.00</div><div class="muted">ระดับผลการประเมิน</div><div class="pill" id="level">ยังไม่ถึงเกณฑ์</div><div style="margin-top:14px" class="muted">ค่าตอบแทนโดยประมาณ</div><div class="result" id="monthly">0 บาท/เดือน</div><div class="small" id="yearly">รวม 12 เดือน = 0 บาท</div></div>
-      <div class="card"><h2>เกณฑ์ที่ใช้</h2><p class="muted">Database score: Web of Science = 1.00, Scopus/PubMed/International = 0.75, TCI กลุ่ม 1 = 0.50<br>Author weight: First+Corresponding = 1.25, First หรือ Corresponding = 1.00, Co-author = 0.25</p></div>
+      <div class="card"><h2>ผลคำนวณ</h2><div class="muted">คะแนนรวม</div><div class="result" id="totalScore">0.00</div><div class="muted">ระดับผลการประเมิน</div><div class="pill" id="level">ยังไม่ถึงเกณฑ์</div><div style="margin-top:14px" class="muted">ค่าตอบแทนโดยประมาณ</div><div class="result" id="monthly">0 บาท/เดือน</div><div class="small" id="yearly">รวม 12 เดือน = 0 บาท</div><div id="nextInfo" class="nextBox hidden"></div></div>
+      <div class="card"><h2>เกณฑ์ที่ใช้</h2><p class="muted">Database score: Web of Science = 1.00, Scopus/PubMed/International = 0.75, TCI กลุ่ม 1 = 0.50<br>Author weight: First+Corresponding = 1.25, First หรือ Corresponding = 1.00, Co-author = 0.25</p><p class="small">แก้ปัญหาช่วงคะแนนว่างแล้ว: โปรแกรมใช้เกณฑ์แบบ threshold ขั้นต่ำ ไม่ใช้ max range ดังนั้นคะแนน 1.625 ของ ผศ. จะได้ระดับ 2 และ 1.63 ขึ้นไปจึงเป็นระดับ 3</p></div>
     </div>
   </div>
 </div>
 <script>
 if(window.pdfjsLib){pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'}
+
 const dbScore={wos:1.00,intl:0.75,tci:0.50};
 const dbName={wos:'Web of Science',intl:'Scopus/PubMed/International',tci:'TCI กลุ่ม 1'};
 const roleWeight={fc:1.25,f_or_c:1.00,co:0.25};
 const roleName={fc:'First + Corresponding',f_or_c:'First หรือ Corresponding',co:'Co-author'};
-const rates={assistant:[{min:.37,max:.86,level:1,m:2240},{min:.87,max:1.62,level:2,m:4480},{min:1.63,max:2.62,level:3,m:6720},{min:2.63,max:Infinity,level:4,m:8400}],associate:[{min:.50,max:1.24,level:1,m:3960},{min:1.25,max:2.24,level:2,m:7920},{min:2.25,max:3.24,level:3,m:11880},{min:3.25,max:Infinity,level:4,m:14850}],professor:[{min:1.00,max:1.74,level:1,m:5200},{min:1.75,max:2.74,level:2,m:10400},{min:2.75,max:3.74,level:3,m:15600},{min:3.75,max:Infinity,level:4,m:19500}]};
-function showMode(mode){document.getElementById('manualBox').classList.toggle('hidden',mode!=='manual');document.getElementById('uploadBox').classList.toggle('hidden',mode!=='upload');document.getElementById('tabManual').classList.toggle('active',mode==='manual');document.getElementById('tabUpload').classList.toggle('active',mode==='upload')}
-function addPaper(title='',db='intl',role='co',qty=1){const div=document.createElement('div');div.className='row';div.innerHTML=`<div><label>ชื่อผลงาน</label><input class="title" value="${escapeHtml(title)}" placeholder="ชื่อบทความ" oninput="calculate()"></div><div><label>ฐานข้อมูล</label><select class="db" onchange="calculate()"><option value="wos">Web of Science</option><option value="intl">Scopus/PubMed/International</option><option value="tci">TCI กลุ่ม 1</option></select></div><div><label>บทบาท</label><select class="role" onchange="calculate()"><option value="fc">First + Corresponding</option><option value="f_or_c">First หรือ Corresponding</option><option value="co">Co-author</option></select></div><div><label>จำนวน</label><input class="qty" type="number" min="1" value="${qty}" oninput="calculate()"></div><button class="danger" onclick="this.parentElement.remove();calculate()">×</button>`;document.getElementById('papers').appendChild(div);div.querySelector('.db').value=db;div.querySelector('.role').value=role;calculate()}
+
+// IMPORTANT: thresholds are sorted from highest to lowest and use MINIMUM score only.
+// This fixes the gap problem such as assistant score 1.625 not fitting 0.87-1.62 or 1.63-2.62.
+const rateThresholds={
+  assistant:[
+    {min:2.63,level:4,m:8400},
+    {min:1.63,level:3,m:6720},
+    {min:0.87,level:2,m:4480},
+    {min:0.37,level:1,m:2240}
+  ],
+  associate:[
+    {min:3.25,level:4,m:14850},
+    {min:2.25,level:3,m:11880},
+    {min:1.25,level:2,m:7920},
+    {min:0.50,level:1,m:3960}
+  ],
+  professor:[
+    {min:3.75,level:4,m:19500},
+    {min:2.75,level:3,m:15600},
+    {min:1.75,level:2,m:10400},
+    {min:1.00,level:1,m:5200}
+  ]
+};
+
+function showMode(mode){
+  document.getElementById('manualBox').classList.toggle('hidden',mode!=='manual');
+  document.getElementById('uploadBox').classList.toggle('hidden',mode!=='upload');
+  document.getElementById('scoreBox').classList.toggle('hidden',mode!=='score');
+  document.getElementById('tabManual').classList.toggle('active',mode==='manual');
+  document.getElementById('tabUpload').classList.toggle('active',mode==='upload');
+  document.getElementById('tabScore').classList.toggle('active',mode==='score');
+  calculate();
+}
+
+function getCurrentMode(){
+  if(!document.getElementById('scoreBox').classList.contains('hidden')) return 'score';
+  if(!document.getElementById('uploadBox').classList.contains('hidden')) return 'upload';
+  return 'manual';
+}
+
+function addPaper(title='',db='intl',role='co',qty=1){
+  const div=document.createElement('div');
+  div.className='row';
+  div.innerHTML=`<div><label>ชื่อผลงาน</label><input class="title" value="${escapeHtml(title)}" placeholder="ชื่อบทความ" oninput="calculate()"></div><div><label>ฐานข้อมูล</label><select class="db" onchange="calculate()"><option value="wos">Web of Science</option><option value="intl">Scopus/PubMed/International</option><option value="tci">TCI กลุ่ม 1</option></select></div><div><label>บทบาท</label><select class="role" onchange="calculate()"><option value="fc">First + Corresponding</option><option value="f_or_c">First หรือ Corresponding</option><option value="co">Co-author</option></select></div><div><label>จำนวน</label><input class="qty" type="number" min="1" step="1" value="${qty}" oninput="calculate()"></div><button class="danger" onclick="this.parentElement.remove();calculate()">×</button>`;
+  document.getElementById('papers').appendChild(div);
+  div.querySelector('.db').value=db;
+  div.querySelector('.role').value=role;
+  calculate();
+}
+
 function clearAll(){document.getElementById('papers').innerHTML='';calculate()}
-function escapeHtml(s){return String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
-function money(n){return n.toLocaleString('th-TH')+' บาท'}
-function calculate(){let total=0,rows=[];document.querySelectorAll('#papers .row').forEach((r,i)=>{const title=r.querySelector('.title').value||'-';const db=r.querySelector('.db').value;const role=r.querySelector('.role').value;const qty=Math.max(1,parseFloat(r.querySelector('.qty').value)||1);const score=dbScore[db]*roleWeight[role]*qty;total+=score;rows.push({i:i+1,title,db,role,score})});const rank=document.getElementById('rank').value;const rate=rates[rank].find(x=>total>=x.min&&total<=x.max);document.getElementById('totalScore').textContent=total.toFixed(4).replace(/0+$/,'').replace(/\.$/,'');document.getElementById('level').textContent=rate?`ระดับ ${rate.level}`:'ยังไม่ถึงเกณฑ์';document.getElementById('monthly').textContent=rate?money(rate.m)+'/เดือน':'0 บาท/เดือน';document.getElementById('yearly').textContent='รวม 12 เดือน = '+money(rate?rate.m*12:0);document.getElementById('breakdown').innerHTML=rows.map(x=>`<tr><td>${x.i}</td><td>${escapeHtml(x.title)}</td><td>${dbName[x.db]}</td><td>${roleName[x.role]}</td><td>${x.score.toFixed(4).replace(/0+$/,'').replace(/\.$/,'')}</td></tr>`).join('')}
+function escapeHtml(s){return String(s||'').replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c]))}
+function money(n){return Number(n||0).toLocaleString('th-TH')+' บาท'}
+function displayScore(n){return Number(n||0).toFixed(4).replace(/0+$/,'').replace(/\.$/,'')}
+
+function findRate(rank,total){
+  return rateThresholds[rank].find(x=>total>=x.min) || null;
+}
+
+function getNextThreshold(rank,total){
+  const ascending=[...rateThresholds[rank]].sort((a,b)=>a.min-b.min);
+  return ascending.find(x=>total<x.min) || null;
+}
+
+function calculate(){
+  let total=0,rows=[];
+  const mode=getCurrentMode();
+
+  if(mode==='score'){
+    total=parseFloat(document.getElementById('manualScore').value)||0;
+    rows=[];
+  }else{
+    document.querySelectorAll('#papers .row').forEach((r,i)=>{
+      const title=r.querySelector('.title').value||'-';
+      const db=r.querySelector('.db').value;
+      const role=r.querySelector('.role').value;
+      const qty=Math.max(1,parseFloat(r.querySelector('.qty').value)||1);
+      const score=dbScore[db]*roleWeight[role]*qty;
+      total+=score;
+      rows.push({i:i+1,title,db,role,score});
+    });
+  }
+
+  const rank=document.getElementById('rank').value;
+  const rate=findRate(rank,total);
+  document.getElementById('totalScore').textContent=displayScore(total);
+  document.getElementById('level').textContent=rate?`ระดับ ${rate.level}`:'ยังไม่ถึงเกณฑ์';
+  document.getElementById('monthly').textContent=rate?money(rate.m)+'/เดือน':'0 บาท/เดือน';
+  document.getElementById('yearly').textContent='รวม 12 เดือน = '+money(rate?rate.m*12:0);
+  document.getElementById('breakdown').innerHTML=rows.length?rows.map(x=>`<tr><td>${x.i}</td><td>${escapeHtml(x.title)}</td><td>${dbName[x.db]}</td><td>${roleName[x.role]}</td><td>${displayScore(x.score)}</td></tr>`).join(''):`<tr><td colspan="5" class="muted">ไม่มีรายการ หรือใช้โหมดกรอกคะแนนรวม</td></tr>`;
+  renderNextInfo(rank,total,rate);
+}
+
+function renderNextInfo(rank,total,rate){
+  const box=document.getElementById('nextInfo');
+  const next=getNextThreshold(rank,total);
+  if(!next){
+    if(rate){box.classList.remove('hidden');box.innerHTML=`อยู่ระดับสูงสุดของตำแหน่งนี้แล้ว <b>ระดับ ${rate.level}</b>`;}
+    else{box.classList.add('hidden');box.innerHTML='';}
+    return;
+  }
+  const need=Math.max(0,next.min-total);
+  const currentMin=rate?rate.min:0;
+  const span=Math.max(0.0001,next.min-currentMin);
+  const pct=Math.max(0,Math.min(100,((total-currentMin)/span)*100));
+  box.classList.remove('hidden');
+  box.innerHTML=`อีก <b>${displayScore(need)}</b> คะแนน จะขึ้น <b>ระดับ ${next.level}</b> <span class="small">(threshold ${next.min})</span><div class="progress"><div class="bar" style="width:${pct}%"></div></div>`;
+}
+
 function mapDb(s){s=(s||'').toLowerCase();if(s.includes('web of science'))return'wos';if(s.includes('tci'))return'tci';return'intl'}
 function mapRole(s){s=(s||'').toLowerCase();if(s.includes('first')&&s.includes('corresponding'))return'fc';if(s.includes('first')||s.includes('corresponding'))return'f_or_c';return'co'}
-async function parsePdfFile(e){const file=e.target.files[0];if(!file)return;const status=document.getElementById('parseStatus');status.className='warn';status.textContent='กำลังอ่าน PDF...';try{const buf=await file.arrayBuffer();const pdf=await pdfjsLib.getDocument({data:buf}).promise;let full='';for(let p=1;p<=pdf.numPages;p++){const page=await pdf.getPage(p);const content=await page.getTextContent();full+=content.items.map(it=>it.str).join(' ')+'\n'}document.getElementById('rawText').textContent=full;const parsed=parseCompensationText(full);clearAll();parsed.items.forEach(it=>addPaper(it.title,it.db,it.role,1));if(parsed.rank)document.getElementById('rank').value=parsed.rank;if(parsed.year)document.getElementById('yearNote').value=parsed.year;calculate();status.className='ok';status.textContent=`อ่านสำเร็จ: พบผลงาน ${parsed.items.length} รายการ`+(parsed.items.length===0?' — อาจต้องกรอกเองหรือปรับไฟล์ PDF':'');}catch(err){console.error(err);status.className='warn';status.textContent='อ่าน PDF ไม่สำเร็จ อาจเป็นไฟล์ scan รูปภาพ หรือ browser บล็อก pdf.js'}}
-function parseCompensationText(text){let rank='assistant';if(text.includes('รองศาสตราจารย์'))rank='associate';if(text.includes('ศาสตราจารย์')&&!text.includes('ผู้ช่วยศาสตราจารย์')&&!text.includes('รองศาสตราจารย์'))rank='professor';let year=(text.match(/ประจำปี\s*([0-9]{4})/)||[])[0]||'';let items=[];let parts=text.split(/ชื่อผลงาน\s*:/).slice(1);parts.forEach(part=>{let title=(part.split(/ชื่อวารสาร\s*:/)[0]||'').trim().replace(/\s+/g,' ');let dbMatch=part.match(/ฐานข้อมูล\s*:\s*([^\n:]+?)\s*การมีส่วนร่วมในผลงาน\s*:/);let roleMatch=part.match(/การมีส่วนร่วมในผลงาน\s*:\s*([^\n]+?)\s*(รหัสอ้างอิง|ISSN|E-ISSN|ชื่อผลงาน|$)/);let db=dbMatch?mapDb(dbMatch[1]):mapDb(part);let role=roleMatch?mapRole(roleMatch[1]):mapRole(part);if(title)items.push({title,db,role})});return{rank,year,items}}
+
+async function parsePdfFile(e){
+  const file=e.target.files[0];if(!file)return;
+  const status=document.getElementById('parseStatus');status.className='warn';status.textContent='กำลังอ่าน PDF...';
+  try{
+    const buf=await file.arrayBuffer();
+    const pdf=await pdfjsLib.getDocument({data:buf}).promise;
+    let full='';
+    for(let p=1;p<=pdf.numPages;p++){
+      const page=await pdf.getPage(p);
+      const content=await page.getTextContent();
+      full+=content.items.map(it=>it.str).join(' ')+'\n';
+    }
+    document.getElementById('rawText').textContent=full;
+    const parsed=parseCompensationText(full);
+    clearAll();
+    parsed.items.forEach(it=>addPaper(it.title,it.db,it.role,1));
+    if(parsed.rank)document.getElementById('rank').value=parsed.rank;
+    if(parsed.year)document.getElementById('yearNote').value=parsed.year;
+    calculate();
+    status.className='ok';
+    status.textContent=`อ่านสำเร็จ: พบผลงาน ${parsed.items.length} รายการ`+(parsed.items.length===0?' — อาจต้องกรอกเองหรือปรับไฟล์ PDF':'');
+  }catch(err){
+    console.error(err);status.className='warn';status.textContent='อ่าน PDF ไม่สำเร็จ อาจเป็นไฟล์ scan รูปภาพ หรือ browser บล็อก pdf.js';
+  }
+}
+
+function parseCompensationText(text){
+  let rank='assistant';
+  if(text.includes('รองศาสตราจารย์'))rank='associate';
+  if(text.includes('ศาสตราจารย์')&&!text.includes('ผู้ช่วยศาสตราจารย์')&&!text.includes('รองศาสตราจารย์'))rank='professor';
+  let year=(text.match(/ประจำปี\s*([0-9]{4})/)||[])[0]||'';
+  let items=[];
+  let parts=text.split(/ชื่อผลงาน\s*:/).slice(1);
+  parts.forEach(part=>{
+    let title=(part.split(/ชื่อวารสาร\s*:/)[0]||'').trim().replace(/\s+/g,' ');
+    let dbMatch=part.match(/ฐานข้อมูล\s*:\s*([^\n:]+?)\s*การมีส่วนร่วมในผลงาน\s*:/);
+    let roleMatch=part.match(/การมีส่วนร่วมในผลงาน\s*:\s*([^\n]+?)\s*(รหัสอ้างอิง|ISSN|E-ISSN|ชื่อผลงาน|$)/);
+    let db=dbMatch?mapDb(dbMatch[1]):mapDb(part);
+    let role=roleMatch?mapRole(roleMatch[1]):mapRole(part);
+    if(title)items.push({title,db,role});
+  });
+  return{rank,year,items};
+}
+
+// Start with one blank row
 addPaper();
 </script>
 </body>
